@@ -1,103 +1,215 @@
-import Image from "next/image";
+// src/app/page.tsx
+'use client';
 
-export default function Home() {
+import { useQuery } from '@tanstack/react-query';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
+import React, { useState } from 'react';
+
+import { MostLikedPostCard } from '@/components/post/MostLiked';
+import { PostCard } from '@/components/post/PostCard';
+
+import Footer from './home/partials/footer';
+import Navbar from './home/partials/navbar';
+
+import { getMostLikedPosts, getRecommendedPosts } from '@/lib/api/posts';
+import type { Post } from '@/types';
+
+// Komponen Pagination
+interface PaginationProps {
+  currentPage: number;
+  totalPages: number;
+  onPageChange: (page: number) => void;
+}
+
+const Pagination: React.FC<PaginationProps> = ({
+  currentPage,
+  totalPages,
+  onPageChange,
+}) => {
+  const getPageNumbers = () => {
+    const pages = [];
+    const maxVisiblePages = 5;
+
+    if (totalPages <= maxVisiblePages) {
+      for (let i = 1; i <= totalPages; i++) {
+        pages.push(i);
+      }
+    } else {
+      if (currentPage <= 3) {
+        pages.push(1, 2, 3, '...', totalPages);
+      } else if (currentPage >= totalPages - 2) {
+        pages.push(
+          1,
+          '...',
+          totalPages - 3,
+          totalPages - 2,
+          totalPages - 1,
+          totalPages
+        );
+      } else {
+        pages.push(
+          1,
+          '...',
+          currentPage - 1,
+          currentPage,
+          currentPage + 1,
+          '...',
+          totalPages
+        );
+      }
+    }
+
+    return pages;
+  };
+
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm/6 text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-[family-name:var(--font-geist-mono)] font-semibold">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
-
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+    <div className='mt-8 flex items-center justify-center gap-2'>
+      {/* Previous Button */}
+      <button
+        onClick={() => {
+          onPageChange(currentPage - 1);
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }}
+        disabled={currentPage === 1}
+        className={`rounded-md px-3 py-2 text-sm font-medium transition-colors ${
+          currentPage === 1
+            ? 'cursor-not-allowed bg-neutral-100 text-neutral-400'
+            : 'bg-white text-neutral-700 hover:bg-neutral-50'
+        }`}
+      >
+        <div className='flex items-center gap-1.5'>
+          <ChevronLeft />
+          Previous
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+      </button>
+
+      {/* Page Numbers */}
+      {getPageNumbers().map((page, index) => (
+        <React.Fragment key={index}>
+          {page === '...' ? (
+            <span className='px-3 py-2 text-neutral-500'>...</span>
+          ) : (
+            <button
+              onClick={() =>
+                typeof page === 'number' ? onPageChange(page) : undefined
+              }
+              className={`flex h-12 w-12 items-center justify-center rounded-full px-3 py-2 text-sm font-medium transition-colors ${
+                currentPage === page
+                  ? 'bg-primary-300 text-white'
+                  : 'bg-white text-neutral-700 hover:bg-neutral-50'
+              }`}
+            >
+              {page}
+            </button>
+          )}
+        </React.Fragment>
+      ))}
+
+      {/* Next Button */}
+      <button
+        onClick={() => onPageChange(currentPage + 1)}
+        disabled={currentPage === totalPages}
+        className={`rounded-md px-3 py-2 text-sm font-medium transition-colors ${
+          currentPage === totalPages
+            ? 'cursor-not-allowed bg-neutral-100 text-neutral-400'
+            : 'bg-white text-neutral-700 hover:bg-neutral-50'
+        }`}
+      >
+        <div className='flex items-center gap-1.5'>
+          Next
+          <ChevronRight />
+        </div>
+      </button>
     </div>
+  );
+};
+
+export default function HomePage() {
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 5;
+
+  // Fetch data berdasarkan halaman aktif
+  const { data: recommended, isLoading: loadingRecommended } = useQuery({
+    queryKey: ['recommended-posts', currentPage],
+    queryFn: () => getRecommendedPosts(itemsPerPage, currentPage),
+  });
+
+  const { data: mostLiked, isLoading: loadingMostLiked } = useQuery({
+    queryKey: ['most-liked-posts'],
+    queryFn: () => getMostLikedPosts(10, 1),
+  });
+
+  // Hitung total halaman dari API response
+  const totalPages = recommended?.lastPage || 0;
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+    // Scroll ke top saat ganti halaman
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  return (
+    <>
+      <Navbar />
+      <div className='custom-container mt-24 grid grid-cols-1 gap-8 md:grid-cols-3'>
+        {/* Left column - Recommended with Pagination */}
+        <div className='col-span-2 flex flex-col gap-6'>
+          <h1 className='text-display-sm font-bold text-neutral-900'>
+            Recommended for you
+          </h1>
+
+          {loadingRecommended ? (
+            <p>Loading recommended...</p>
+          ) : (
+            <>
+              {/* Render posts langsung dari API */}
+              {recommended?.data.map((post: any, index: number) => (
+                <React.Fragment key={post.id}>
+                  <PostCard {...post} />
+                  {index !== recommended.data.length - 1 && (
+                    <hr className='border-t border-neutral-200' />
+                  )}
+                </React.Fragment>
+              ))}
+
+              {/* Pagination Component */}
+              {totalPages > 1 && (
+                <Pagination
+                  currentPage={currentPage}
+                  totalPages={totalPages}
+                  onPageChange={handlePageChange}
+                />
+              )}
+            </>
+          )}
+
+          {/* Total post info */}
+          <p>total post: {recommended?.total}</p>
+        </div>
+
+        {/* Right column - Most liked */}
+        <div className='flex flex-col gap-6'>
+          <h1 className='text-display-xs font-bold text-neutral-900'>
+            Most liked
+          </h1>
+          {loadingMostLiked ? (
+            <p>Loading most liked...</p>
+          ) : (
+            mostLiked?.data
+              .sort((a: Post, b: Post) => b.likesCount - a.likesCount)
+              .slice(0, 3)
+              .map((post: any, index: number) => (
+                <React.Fragment key={post.id}>
+                  <MostLikedPostCard {...post} hideImage />
+                  {index !== mostLiked.data.length - 1 && (
+                    <hr className='border-t border-neutral-200' />
+                  )}
+                </React.Fragment>
+              ))
+          )}
+        </div>
+      </div>
+      <Footer />
+    </>
   );
 }

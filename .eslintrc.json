@@ -1,0 +1,8 @@
+{
+  "extends": "next/core-web-vitals",
+  "plugins": ["@typescript-eslint", "import", "prettier"],
+  "rules": {
+    "import/no-unresolved": ["error", { "ignore": ["^@/.*"] }],
+    "import/no-extraneous-dependencies": "off"
+  }
+}
