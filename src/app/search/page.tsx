@@ -8,10 +8,10 @@ import { useSearchParams } from 'next/navigation';
 import { PostCard } from '@/components/post/PostCard';
 import { Button } from '@/components/ui/Button';
 
+import { searchPosts } from '@/lib/api/posts';
+
 import Footer from '../home/partials/footer';
 import Navbar from '../home/partials/navbar';
-
-import { searchPosts } from '@/lib/api/posts';
 
 export default function SearchPage() {
   const params = useSearchParams();
