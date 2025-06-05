@@ -8,11 +8,11 @@ import React, { useState } from 'react';
 import { MostLikedPostCard } from '@/components/post/MostLiked';
 import { PostCard } from '@/components/post/PostCard';
 
-import Footer from './home/partials/footer';
-import Navbar from './home/partials/navbar';
-
 import { getMostLikedPosts, getRecommendedPosts } from '@/lib/api/posts';
 import type { Post } from '@/types';
+
+import Footer from './home/partials/footer';
+import Navbar from './home/partials/navbar';
 
 // Komponen Pagination
 interface PaginationProps {
@@ -196,7 +196,7 @@ export default function HomePage() {
             <p>Loading most liked...</p>
           ) : (
             mostLiked?.data
-              .sort((a: Post, b: Post) => b.likesCount - a.likesCount)
+              .sort((a: Post, b: Post) => b.likes - a.likes)
               .slice(0, 3)
               .map((post: any, index: number) => (
                 <React.Fragment key={post.id}>
