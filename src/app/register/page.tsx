@@ -7,7 +7,7 @@ import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
-import { Button } from '@/components/ui/Button';
+import { Button } from '@/components/ui/button';
 
 import { register as registerApi } from '@/lib/api/auth';
 

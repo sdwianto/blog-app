@@ -7,7 +7,7 @@ import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
-import { Button } from '@/components/ui/Button';
+import { Button } from '@/components/ui/button';
 
 import { createPost, updatePost } from '@/lib/api/posts';
 
@@ -57,15 +57,17 @@ export const PostForm = ({ mode, initialData, postId }: PostFormProps) => {
       className='flex flex-col gap-4'
     >
       <input {...register('title')} placeholder='Title' className='input' />
-      {errors.title && <p className='text-red-500'>{errors.title.message}</p>}
+      {errors.title && (
+        <p className='text-red-500'>{errors.title.message as string}</p>
+      )}
 
       <textarea
         {...register('content')}
         placeholder='Content'
         className='input min-h-[120px]'
       />
-      {errors.content && (
-        <p className='text-red-500'>{errors.content.message}</p>
+      {errors.content?.message && (
+        <p className='text-red-500'>{errors.content.message as string}</p>
       )}
 
       <input

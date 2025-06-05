@@ -9,8 +9,12 @@ export const apiClient = async <T = any>(
   endpoint: string,
   { auth = false, ...options }: Options = {}
 ): Promise<T> => {
-  const headers: HeadersInit = {
-    ...(options.headers || {}),
+  const headers: Record<string, string> = {
+    ...(options.headers instanceof Headers
+      ? Object.fromEntries(options.headers.entries())
+      : typeof options.headers === 'object' && !Array.isArray(options.headers)
+        ? options.headers
+        : {}),
     'Content-Type': 'application/json',
     Accept: 'application/json',
   };
