@@ -1,12 +1,10 @@
 // src/app/layout.tsx
-'use client';
 
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import clsx from 'clsx';
 import { Inter } from 'next/font/google';
+
 import './globals.css';
-import { useState } from 'react';
+import { QueryProvider } from '@/components/QueryProvider';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -15,17 +13,6 @@ const inter = Inter({
   variable: '--font-inter',
 });
 
-function QueryProvider({ children }: { children: React.ReactNode }) {
-  const [queryClient] = useState(() => new QueryClient());
-
-  return (
-    <QueryClientProvider client={queryClient}>
-      {children}
-      <ReactQueryDevtools initialIsOpen={false} />
-    </QueryClientProvider>
-  );
-}
-
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -33,7 +20,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang='en'>
-      <body className={clsx(inter.variable, `antialiased`)}>
+      <body className={clsx(inter.variable, 'font-sans')}>
         <QueryProvider>{children}</QueryProvider>
       </body>
     </html>

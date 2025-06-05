@@ -1,56 +1,82 @@
 // /lib/api/posts.ts --> All post related API
-import { apiClient } from './client';
 
-export const getRecommendedPosts = (limit = 10, page = 1) =>
-  apiClient(`/posts/recommended?limit=${limit}&page=${page}`);
+const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
-export const getMostLikedPosts = (limit = 10, page = 1) =>
-  apiClient(`/posts/most-liked?limit=${limit}&page=${page}`);
+export async function getPostById(id: number) {
+  const res = await fetch(`${BASE_URL}/posts/${id}`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${localStorage.getItem('token')}`,
+    },
+  });
+  if (!res.ok) {
+    throw new Error(`Failed to fetch post with id ${id}`);
+  }
+  return res.json();
+}
 
-export const searchPosts = (query: string, limit = 10, page = 1) =>
-  apiClient(
-    `/posts/search?query=${encodeURIComponent(query)}&limit=${limit}&page=${page}`
+export async function getPostLikes(id: number) {
+  const res = await fetch(`${BASE_URL}/posts/${id}/likes`);
+  if (!res.ok) throw new Error(`Failed to fetch likes for post ${id}`);
+  return res.json();
+}
+
+export async function getRecommendedPosts(limit = 10, page = 1) {
+  const res = await fetch(
+    `${BASE_URL}/posts/recommended?limit=${limit}&page=${page}`
   );
+  if (!res.ok) throw new Error('Failed to fetch recommended posts');
+  return res.json();
+}
 
-export const getPostComments = (postId: number) =>
-  apiClient(`/posts/${postId}/comments`);
+export async function getMostLikedPosts(limit = 10, page = 1) {
+  const res = await fetch(
+    `${BASE_URL}/posts/most-liked?limit=${limit}&page=${page}`
+  );
+  if (!res.ok) throw new Error('Failed to fetch most liked posts');
+  return res.json();
+}
 
-export const getPostLikes = (postId: number) =>
-  apiClient(`/posts/${postId}/likes`);
+export async function searchPosts(query: string, limit = 10, page = 1) {
+  const res = await fetch(
+    `${BASE_URL}/posts/search?query=${encodeURIComponent(query)}&limit=${limit}&page=${page}`
+  );
+  if (!res.ok) throw new Error('Failed to search posts');
+  return res.json();
+}
 
-export const likePost = (postId: number) =>
-  apiClient(`/posts/${postId}/like`, {
-    method: 'POST',
-    auth: true,
-  });
-
-export const deletePost = (id: number) =>
-  apiClient(`/posts/${id}`, {
-    method: 'DELETE',
-    auth: true,
-    body: JSON.stringify({}),
-  });
-
-export const createPost = (formData: FormData) =>
-  fetch('https://truthful-simplicity-production.up.railway.app/posts', {
+export async function createPost(formData: FormData) {
+  const res = await fetch(`${BASE_URL}/posts`, {
     method: 'POST',
     headers: {
-      Authorization: `Bearer ${localStorage.getItem('token') || ''}`,
+      Authorization: `Bearer ${localStorage.getItem('token')}`,
     },
     body: formData,
-  }).then((res) => {
-    if (!res.ok) throw new Error('Failed to create post');
-    return res.json();
   });
+  if (!res.ok) throw new Error('Failed to create post');
+  return res.json();
+}
 
-export const updatePost = (id: number, formData: FormData) =>
-  fetch(`https://truthful-simplicity-production.up.railway.app/posts/${id}`, {
+export async function updatePost(id: number, formData: FormData) {
+  const res = await fetch(`${BASE_URL}/posts/${id}`, {
     method: 'PATCH',
     headers: {
-      Authorization: `Bearer ${localStorage.getItem('token') || ''}`,
+      Authorization: `Bearer ${localStorage.getItem('token')}`,
     },
     body: formData,
-  }).then((res) => {
-    if (!res.ok) throw new Error('Failed to update post');
-    return res.json();
   });
+  if (!res.ok) throw new Error('Failed to update post');
+  return res.json();
+}
+
+export async function likePost(id: number) {
+  const res = await fetch(`${BASE_URL}/posts/${id}/like`, {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem('token')}`,
+    },
+  });
+  if (!res.ok) throw new Error('Failed to like post');
+  return res.json();
+}

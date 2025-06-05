@@ -3,6 +3,7 @@
 import { Icon } from '@iconify/react';
 import { MessageSquare, ThumbsUp } from 'lucide-react';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 import React from 'react';
 
 type PostCardProps = {
@@ -21,7 +22,7 @@ type PostCardProps = {
 };
 
 // Fallback author image URL
-const FALLBACK_AUTHOR_IMAGE = '/images/default-author.jpg';
+export const FALLBACK_AUTHOR_IMAGE = '/images/default-author.jpg';
 
 export const PostCard = ({
   id,
@@ -34,11 +35,14 @@ export const PostCard = ({
   likes,
   comments,
 }: PostCardProps) => {
+  const router = useRouter();
+
+  const handleNavigate = () => {
+    router.push(`/post/${id}`);
+  };
+
   return (
-    <div
-      className='flex cursor-pointer gap-6'
-      onClick={() => (window.location.href = `/post/${id}`)}
-    >
+    <div className='flex cursor-pointer gap-6' onClick={handleNavigate}>
       <Image
         src={imageUrl}
         alt={title}
