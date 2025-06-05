@@ -6,7 +6,7 @@ import { useQuery } from '@tanstack/react-query';
 import { MessageSquare, ThumbsUp } from 'lucide-react';
 import Image from 'next/image';
 import { useParams } from 'next/navigation';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
 import { FALLBACK_AUTHOR_IMAGE } from '@/components/post/PostCard';
 
@@ -24,10 +24,18 @@ export default function PostDetailPage() {
     queryFn: () => getPostById(Number(id)),
   });
 
-  const { data: comments } = useQuery({
+  const { data: commentsData } = useQuery({
     queryKey: ['comments', id],
     queryFn: () => getCommentsByPost(Number(id)),
   });
+
+  const [comments, setComments] = useState<any[]>([]);
+
+  useEffect(() => {
+    if (commentsData) {
+      setComments(commentsData);
+    }
+  }, [commentsData]);
 
   const { data: likes } = useQuery({
     queryKey: ['likes', id],
@@ -84,7 +92,7 @@ export default function PostDetailPage() {
                   <ThumbsUp /> {likes?.length}
                 </div>
                 <div className='flex items-center gap-1.5'>
-                  <MessageSquare /> {post?.commentsCount}
+                  <MessageSquare /> {post?.comments}
                 </div>
               </div>
             </div>
