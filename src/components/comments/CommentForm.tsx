@@ -5,6 +5,8 @@
 import { useMutation } from '@tanstack/react-query';
 import { useState } from 'react';
 
+import { Button } from '../ui/Button';
+
 import { postComment } from '@/lib/api/comments';
 
 export const CommentForm = ({
@@ -34,9 +36,9 @@ export const CommentForm = ({
         value={content}
         onChange={(e) => setContent(e.target.value)}
       />
-      <button type='submit' className='btn btn-primary'>
+      <Button type='submit' className='btn btn-primary'>
         Post Comment
-      </button>
+      </Button>
     </form>
   );
 };

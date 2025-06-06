@@ -6,7 +6,7 @@ import Image from 'next/image';
 import { useSearchParams } from 'next/navigation';
 
 import { PostCard } from '@/components/post/PostCard';
-import { Button } from '@/components/ui/button';
+import { Button } from '@/components/ui/Button';
 
 import { searchPosts } from '@/lib/api/posts';
 

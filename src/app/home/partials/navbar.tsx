@@ -6,7 +6,7 @@ import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 
-import { Button } from '@/components/ui/button';
+import { Button } from '@/components/ui/Button';
 
 const Navbar = () => {
   const router = useRouter();
@@ -135,7 +135,7 @@ const Navbar = () => {
             </>
           ) : (
             <>
-              <button onClick={() => router.push('/login')}>Login</button>
+              <Button onClick={() => router.push('/login')}>Login</Button>
               <Button onClick={() => router.push('/register')}>Register</Button>
             </>
           )}

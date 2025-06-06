@@ -3,6 +3,8 @@
 
 import { useMutation } from '@tanstack/react-query';
 
+import { Button } from '../ui/Button';
+
 import { likePost } from '@/lib/api/posts';
 
 export const LikeButton = ({ postId }: { postId: number }) => {
@@ -12,11 +14,11 @@ export const LikeButton = ({ postId }: { postId: number }) => {
   });
 
   return (
-    <button
+    <Button
       className='text-sm text-blue-600 underline'
       onClick={() => mutation.mutate()}
     >
       👍 Like
-    </button>
+    </Button>
   );
 };
