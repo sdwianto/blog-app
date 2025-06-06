@@ -5,8 +5,9 @@
 import { useMutation } from '@tanstack/react-query';
 import { useState } from 'react';
 
-import { Button } from '../ui/Button';
 import { postComment } from '@/lib/api/comments';
+
+import { Button } from '../ui/Button';
 
 export const CommentForm = ({
   postId,
