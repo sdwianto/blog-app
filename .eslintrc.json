@@ -5,6 +5,7 @@
     "import/no-unresolved": ["error", { "ignore": ["^@/.*"] }],
     "import/no-extraneous-dependencies": "off",
     "rules": {
-  "import/order": "off"
+      "import/order": "off"
+    }
   }
 }
