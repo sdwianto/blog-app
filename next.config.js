@@ -6,6 +6,7 @@ const nextConfig = {
         protocol: 'https',
         hostname: 'truthful-simplicity-production.up.railway.app',
         pathname: '/**',
+        port: '',
       },
     ],
   },

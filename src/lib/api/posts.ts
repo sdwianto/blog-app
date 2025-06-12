@@ -46,6 +46,22 @@ export async function searchPosts(query: string, limit = 10, page = 1) {
   return res.json();
 }
 
+export async function getPostsByAuthor(
+  authorId: number,
+  limit = 100,
+  page = 1
+) {
+  const res = await fetch(
+    `${BASE_URL}/posts/recommended?limit=${limit}&page=${page}`
+  );
+  if (!res.ok) throw new Error('Failed to fetch recommended posts');
+
+  const posts = await res.json();
+
+  // Ambil dari posts.data karena posts adalah object
+  return posts.data.filter((post: any) => post.author?.id === authorId);
+}
+
 export async function createPost(formData: FormData) {
   const res = await fetch(`${BASE_URL}/posts`, {
     method: 'POST',

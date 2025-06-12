@@ -10,6 +10,7 @@ import { z } from 'zod';
 import { Button } from '@/components/ui/Button';
 
 import { register as registerApi } from '@/lib/api/auth';
+import { setProfile } from '@/lib/auth';
 
 const registerSchema = z
   .object({
@@ -39,7 +40,16 @@ export default function RegisterPage() {
   const mutation = useMutation({
     mutationFn: (data: RegisterForm) =>
       registerApi(data.name, data.email, data.password),
-    onSuccess: () => {
+    onSuccess: (_, variables) => {
+      const { name, email, password } = variables;
+      console.log('user:', variables);
+      console.log('login response:', variables);
+      setProfile({
+        name,
+        email,
+        password,
+        image: '',
+      });
       router.push('/login');
     },
     onError: (err: any) => {

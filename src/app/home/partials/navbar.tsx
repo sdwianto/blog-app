@@ -8,17 +8,22 @@ import React, { useEffect, useState } from 'react';
 
 import { Button } from '@/components/ui/Button';
 
+import { getProfile } from '@/lib/auth';
+
 const Navbar = () => {
   const router = useRouter();
   const [query, setQuery] = useState('');
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-
+  const [profile, setProfile] = useState<{
+    name?: string;
+    image?: string;
+  } | null>(null);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
-  // Cek token
   useEffect(() => {
     const token = localStorage.getItem('token');
     setIsLoggedIn(!!token);
+    setProfile(getProfile());
   }, []);
 
   // Handle ketika user enter di input search
@@ -71,13 +76,10 @@ const Navbar = () => {
             <>
               <div
                 className='flex cursor-pointer items-center gap-2'
-                onClick={() => router.push('/write')}
+                onClick={() => router.push('/post/write')}
               >
                 <PenLine className='text-primary-300 h-6 w-6' />
-                <button
-                  // onClick={handleLogout}
-                  className='text-primary-300 text-sm font-medium'
-                >
+                <button className='text-primary-300 cursor-pointer text-sm font-medium underline'>
                   Write Post
                 </button>
               </div>
@@ -99,10 +101,8 @@ const Navbar = () => {
                 ) : (
                   <Cat className='h-10 w-10 text-neutral-500' />
                 )}
-                <p className='text-sm font-medium text-neutral-900 opacity-100'>
-                  {isLoggedIn
-                    ? (localStorage.getItem('name') ?? 'Profile')
-                    : 'Profile'}
+                <p className='text-sm font-medium text-neutral-950 opacity-100'>
+                  {profile?.name || 'Profile'}
                 </p>
                 {isDropdownOpen && (
                   <div className='absolute top-full right-0 mt-2 w-45.5 rounded-xl border border-neutral-300 bg-white shadow-md'>
@@ -112,7 +112,10 @@ const Navbar = () => {
                         width='20'
                         height='20'
                       />
-                      <p className='font-reguler text-sm text-neutral-950'>
+                      <p
+                        onClick={() => router.push('/profile')}
+                        className='font-reguler text-sm text-neutral-950'
+                      >
                         Profile
                       </p>
                     </div>
@@ -135,7 +138,13 @@ const Navbar = () => {
             </>
           ) : (
             <>
-              <Button onClick={() => router.push('/login')}>Login</Button>
+              <p
+                className='text-sm-semibold text-primary-300 cursor-pointer underline'
+                onClick={() => router.push('/login')}
+              >
+                Login
+              </p>
+              <div className='h-6 w-px bg-neutral-300'></div>
               <Button onClick={() => router.push('/register')}>Register</Button>
             </>
           )}

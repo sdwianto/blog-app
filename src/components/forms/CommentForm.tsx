@@ -1,4 +1,4 @@
-// src/components/comments/CommentForm.tsx
+// src/components/forms/CommentForm.tsx
 
 'use client';
 

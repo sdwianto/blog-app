@@ -2,6 +2,7 @@
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from '@tanstack/react-query';
+import { jwtDecode } from 'jwt-decode';
 import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
@@ -9,6 +10,8 @@ import { z } from 'zod';
 import { Button } from '@/components/ui/Button';
 
 import { login } from '@/lib/api/auth';
+import { getUserByEmail } from '@/lib/api/users';
+import { setProfile } from '@/lib/auth';
 
 const loginSchema = z.object({
   email: z.string().email(),
@@ -29,9 +32,22 @@ export default function LoginPage() {
   });
 
   const mutation = useMutation({
-    mutationFn: (data: LoginForm) => login(data.email, data.password),
-    onSuccess: (data) => {
+    mutationFn: async (data: LoginForm) => {
+      const response = await login(data.email, data.password);
+      return response;
+    },
+    onSuccess: async (data) => {
       localStorage.setItem('token', data.token);
+      const decoded: { email: string } = jwtDecode(data.token);
+      const user = await getUserByEmail(decoded.email);
+      console.log('user:', user);
+      console.log('login response:', data);
+      // Store profile data from login response
+      setProfile({
+        name: user.name,
+        email: user.email,
+        image: user.image,
+      });
       router.push('/');
     },
     onError: (err: any) => {
@@ -78,7 +94,9 @@ export default function LoginPage() {
         </div>
 
         <Button className='w-full' type='submit' disabled={mutation.isPending}>
-          {mutation.isPending ? 'Logging in...' : 'Login'}
+          <span className='inline-block min-w-[6rem] text-center'>
+            {mutation.isPending ? 'Logging in...' : 'Login'}
+          </span>
         </Button>
 
         <p className='text-center text-sm'>

@@ -1,4 +1,4 @@
-export interface Post {
+export interface Post extends Record<string, any> {
   id: number;
   title: string;
   content: string;
@@ -7,6 +7,7 @@ export interface Post {
   comments: number;
   tags: string[];
   author: {
+    id: number;
     name: string;
     image?: string;
   };

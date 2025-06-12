@@ -1,4 +1,3 @@
-// src/app/page.tsx
 'use client';
 
 import { useQuery } from '@tanstack/react-query';
@@ -8,12 +7,11 @@ import React, { useState } from 'react';
 import { MostLikedPostCard } from '@/components/post/MostLiked';
 import { PostCard } from '@/components/post/PostCard';
 
-import { getMostLikedPosts, getRecommendedPosts } from '@/lib/api/posts';
-import type { Post } from '@/types';
-
 import Footer from './home/partials/footer';
 import Navbar from './home/partials/navbar';
 
+import { getMostLikedPosts, getRecommendedPosts } from '@/lib/api/posts';
+import type { Post } from '@/types';
 
 // Komponen Pagination
 interface PaginationProps {
@@ -152,62 +150,64 @@ export default function HomePage() {
   return (
     <>
       <Navbar />
-      <div className='custom-container mt-24 grid grid-cols-1 gap-8 md:grid-cols-3'>
+      <div className='custom-container mt-24'>
         {/* Left column - Recommended with Pagination */}
-        <div className='col-span-2 flex flex-col gap-6'>
-          <h1 className='text-display-sm font-bold text-neutral-900'>
-            Recommended for you
-          </h1>
+        <div className='flex items-start gap-8'>
+          <div className='flex w-201.75 flex-col gap-6'>
+            <h1 className='text-display-sm font-bold text-neutral-900'>
+              Recommended for you
+            </h1>
 
-          {loadingRecommended ? (
-            <p>Loading recommended...</p>
-          ) : (
-            <>
-              {/* Render posts langsung dari API */}
-              {recommended?.data.map((post: any, index: number) => (
-                <React.Fragment key={post.id}>
-                  <PostCard {...post} />
-                  {index !== recommended.data.length - 1 && (
-                    <hr className='border-t border-neutral-200' />
-                  )}
-                </React.Fragment>
-              ))}
+            {loadingRecommended ? (
+              <p>Loading recommended...</p>
+            ) : (
+              <>
+                {/* Render posts langsung dari API */}
+                {recommended?.data.map((post: any, index: number) => (
+                  <React.Fragment key={post.id}>
+                    <PostCard {...post} />
+                    {index !== recommended.data.length - 1 && (
+                      <hr className='border-t border-neutral-200' />
+                    )}
+                  </React.Fragment>
+                ))}
 
-              {/* Pagination Component */}
-              {totalPages > 1 && (
-                <Pagination
-                  currentPage={currentPage}
-                  totalPages={totalPages}
-                  onPageChange={handlePageChange}
-                />
-              )}
-            </>
-          )}
+                {/* Pagination Component */}
+                {totalPages > 1 && (
+                  <Pagination
+                    currentPage={currentPage}
+                    totalPages={totalPages}
+                    onPageChange={handlePageChange}
+                  />
+                )}
+              </>
+            )}
 
-          {/* Total post info */}
-          <p>total post: {recommended?.total}</p>
-        </div>
-
-        {/* Right column - Most liked */}
-        <div className='flex flex-col gap-6'>
-          <h1 className='text-display-xs font-bold text-neutral-900'>
-            Most liked
-          </h1>
-          {loadingMostLiked ? (
-            <p>Loading most liked...</p>
-          ) : (
-            mostLiked?.data
-              .sort((a: Post, b: Post) => b.likes - a.likes)
-              .slice(0, 3)
-              .map((post: any, index: number) => (
-                <React.Fragment key={post.id}>
-                  <MostLikedPostCard {...post} hideImage />
-                  {index !== mostLiked.data.length - 1 && (
-                    <hr className='border-t border-neutral-200' />
-                  )}
-                </React.Fragment>
-              ))
-          )}
+            {/* Total post info */}
+            <p>total post: {recommended?.total}</p>
+          </div>
+          <div className='w-px self-stretch bg-neutral-300'></div>
+          {/* Right column - Most liked */}
+          <div className='flex w-74.25 flex-col gap-6'>
+            <h1 className='text-display-xs font-bold text-neutral-900'>
+              Most liked
+            </h1>
+            {loadingMostLiked ? (
+              <p>Loading most liked...</p>
+            ) : (
+              mostLiked?.data
+                .sort((a: Post, b: Post) => b.likes - a.likes)
+                .slice(0, 3)
+                .map((post: any, index: number) => (
+                  <React.Fragment key={post.id}>
+                    <MostLikedPostCard {...post} hideImage />
+                    {index !== mostLiked.data.length - 1 && (
+                      <hr className='border-t border-neutral-200' />
+                    )}
+                  </React.Fragment>
+                ))
+            )}
+          </div>
         </div>
       </div>
       <Footer />
