@@ -8,6 +8,7 @@ import Image from 'next/image';
 import router from 'next/router';
 import React, { useEffect, useState } from 'react';
 
+import { ChangePasswordForm } from '@/components/forms/ChangePasswordForm';
 import { EditProfileModal } from '@/components/post/EditProfileModal';
 import { FALLBACK_AUTHOR_IMAGE } from '@/components/post/PostCard';
 import type { PostCardProps } from '@/components/post/PostCard';
@@ -15,13 +16,12 @@ import { PostCardProfile } from '@/components/post/PostCardProfile';
 import { Button } from '@/components/ui/Button';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 
-import Footer from '../home/partials/footer';
-import Navbar from '../home/partials/navbar';
-import { ChangePasswordForm } from './me/change-password/page';
-
 import { getRecommendedPosts } from '@/lib/api/posts';
 import { getUserByEmail } from '@/lib/api/users';
 import { getProfile } from '@/lib/auth';
+
+import Footer from '../home/partials/footer';
+import Navbar from '../home/partials/navbar';
 
 export default function OwnProfilePage() {
   const [email, setEmail] = useState<string | null>(null);

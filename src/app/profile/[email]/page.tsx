@@ -5,8 +5,14 @@ import Image from 'next/image';
 import { useParams } from 'next/navigation';
 import React from 'react';
 
-import { PostCard, FALLBACK_AUTHOR_IMAGE } from '@/components/post/PostCard';
+import {
+  PostCard,
+  FALLBACK_AUTHOR_IMAGE,
+  PostCardProps,
+} from '@/components/post/PostCard';
 
+import Footer from '@/app/home/partials/footer';
+import Navbar from '@/app/home/partials/navbar';
 import { getRecommendedPosts } from '@/lib/api/posts';
 import { getUserByEmail } from '@/lib/api/users';
 
@@ -53,7 +59,9 @@ export default function PublicProfilePage() {
             {userPosts?.length || 0} Posts
           </p>
           <div className='flex flex-col gap-4'>
-            {userPosts?.map((post) => <PostCard key={post.id} {...post} />)}
+            {userPosts?.map((post: PostCardProps) => (
+              <PostCard key={post.id} {...post} />
+            ))}
           </div>
         </div>
       </div>

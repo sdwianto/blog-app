@@ -5,9 +5,10 @@ import Image from 'next/image';
 import React, { useState } from 'react';
 import toast from 'react-hot-toast';
 
+import { deleteProfile } from '@/lib/api/users';
+
 import { DeleteProfileModal } from './DeleteProfileModal';
 
-import { deleteProfile } from '@/lib/api/users';
 
 export type PostCardProfileProps = {
   title: string;
