@@ -58,7 +58,6 @@ export async function getPostsByAuthor(
 
   const posts = await res.json();
 
-  // Ambil dari posts.data karena posts adalah object
   return posts.data.filter((post: any) => post.author?.id === authorId);
 }
 

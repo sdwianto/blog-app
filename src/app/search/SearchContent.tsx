@@ -1,3 +1,4 @@
+//src/app/search/SearchContent.tsx
 'use client';
 
 interface SearchContentProps {
@@ -11,10 +12,6 @@ export default function SearchContent({
   searchResults = [],
   isLoading = false,
 }: SearchContentProps) {
-  // Search results and loading state are now passed as props from SearchQueryHandler
-  // This removes the need for local state management
-  // TODO: Implement proper typing for searchResults when you have the data structure
-
   return (
     <div className='container mx-auto px-4 py-8'>
       <h1 className='mb-6 text-3xl font-bold'>Search Results</h1>

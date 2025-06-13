@@ -5,7 +5,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { PenLine } from 'lucide-react';
 import Image from 'next/image';
-import router from 'next/router';
+import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 
 import { ChangePasswordForm } from '@/components/forms/ChangePasswordForm';
@@ -16,6 +16,7 @@ import { PostCardProfile } from '@/components/post/PostCardProfile';
 import { Button } from '@/components/ui/Button';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 
+
 import { getRecommendedPosts } from '@/lib/api/posts';
 import { getUserByEmail } from '@/lib/api/users';
 import { getProfile } from '@/lib/auth';
@@ -25,6 +26,8 @@ import Navbar from '../home/partials/navbar';
 
 export default function OwnProfilePage() {
   const [email, setEmail] = useState<string | null>(null);
+
+  const router = useRouter();
 
   useEffect(() => {
     const profile = getProfile();
@@ -103,7 +106,7 @@ export default function OwnProfilePage() {
                       </p>
                       <Button
                         className='w-50 gap-2 rounded-full p-2'
-                        onClick={() => router.push('/write')}
+                        onClick={() => router.push('/post/write')}
                       >
                         <PenLine className='h-6 w-6' />
                         Write Post
@@ -140,7 +143,7 @@ export default function OwnProfilePage() {
                   </div>
                   <Button
                     className='w-50 gap-2 rounded-full p-2'
-                    onClick={() => router.push('/write')}
+                    onClick={() => router.push('/post/write')}
                   >
                     <PenLine className='h-6 w-6' />
                     Write Post

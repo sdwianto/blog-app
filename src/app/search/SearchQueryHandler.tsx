@@ -1,3 +1,4 @@
+// src/app/search/SearchQueryHandler.tsx
 'use client';
 
 import { useQuery } from '@tanstack/react-query';
@@ -11,7 +12,7 @@ import { searchPosts } from '@/lib/api/posts';
 
 export default function SearchQueryHandler() {
   const searchParams = useSearchParams();
-  const query = searchParams.get('q') || '';
+  const query = searchParams.get('query') || '';
 
   if (!query) redirect('/');
 
@@ -21,41 +22,43 @@ export default function SearchQueryHandler() {
     enabled: !!query,
   });
 
+  const searchResults = data?.data ?? [];
+
   return (
-    <div className='custom-container mt-24 mb-77.25'>
-      <h1 className='text-display-sm mb-6 font-bold text-neutral-900'>
-        Result for:{' '}
-        <span className='text-neutral-900'>{'"' + query + '"'}</span>
-      </h1>
+    <div className='container mx-auto px-4 py-8'>
+      <h1 className='mb-6 text-3xl font-bold'>Search Results</h1>
+
+      <p className='mb-4 text-gray-600'>
+        Showing results for: <strong>{query}</strong>
+      </p>
+
       {isLoading ? (
-        <div className='flex min-h-[200px] items-center justify-center'>
-          Loading...
+        <div className='flex items-center justify-center p-4'>
+          <div className='h-8 w-8 animate-spin rounded-full border-b-2 border-gray-900'></div>
         </div>
-      ) : !data?.posts?.length ? (
-        <div className='mt-87 flex flex-col items-center gap-6'>
+      ) : searchResults.length === 0 ? (
+        <div className='mt-20 flex flex-col items-center gap-6'>
           <Image
             src='/icons/notFound.svg'
             alt='not-found'
             width={118}
             height={135}
           />
-          <div className='flex flex-col items-center gap-2'>
-            <p className='text-sm font-semibold text-neutral-950'>
-              No results found
-            </p>
-            <p className='font-regular text-sm text-neutral-950'>
-              Try using different keywords.
-            </p>
-          </div>
-          <Button className='text-neutral-25 text-sm font-medium'>
+          <p className='text-gray-500'>No results found for ${query}</p>
+          <Button
+            onClick={() => redirect('/')}
+            className='text-neutral-25 text-sm font-medium'
+          >
             Back to Home
           </Button>
         </div>
       ) : (
-        <div className='mt-87 flex flex-col items-center gap-6'>
-          {data.data.map((post: any) => (
-            <PostCard key={post.id} {...post} />
-          ))}
+        <div className='w-full overflow-hidden'>
+          <div className='grid grid-cols-1 gap-6'>
+            {searchResults.map((post: any) => (
+              <PostCard key={post.id} {...post} />
+            ))}
+          </div>{' '}
         </div>
       )}
     </div>

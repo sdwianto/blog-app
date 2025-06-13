@@ -43,7 +43,10 @@ const Navbar = () => {
     <header className='fixed top-0 right-0 left-0 z-50 w-full border-b border-neutral-300 bg-white'>
       <div className='flex-between custom-container h-16 md:h-20'>
         {/* Logo */}
-        <div className='flex-between h-9 gap-2.5'>
+        <div
+          className='flex-between h-9 cursor-pointer gap-2.5'
+          onClick={() => router.push('/')}
+        >
           <Image
             src='/icons/logo-symbol.svg'
             alt='logo'
@@ -89,10 +92,10 @@ const Navbar = () => {
                 className='relative flex cursor-pointer items-center gap-2'
                 onClick={() => setIsDropdownOpen(!isDropdownOpen)}
               >
-                {isLoggedIn && localStorage.getItem('image') ? (
+                {isLoggedIn && profile?.image ? (
                   <Image
-                    src={localStorage.getItem('image') || ''}
-                    alt={localStorage.getItem('name') || 'Profile'}
+                    src={profile.image}
+                    alt={profile.name || 'Profile'}
                     width={40}
                     height={40}
                     className='rounded-full'
