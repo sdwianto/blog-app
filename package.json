@@ -28,7 +28,7 @@
     "lexical": "^0.32.1",
     "lucide-react": "^0.511.0",
     "next": "15.3.3",
-    "next-auth": "^4.24.11",
+    "next-auth": "^4.24.12",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-hook-form": "^7.57.0",
